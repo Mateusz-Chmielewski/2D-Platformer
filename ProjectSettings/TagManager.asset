@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Bonus
+  - Enemies
+  - Key
+  - Heart
+  - FallLevel
+  - MovingPlatform
+  - GameManager
   layers:
   - Default
   - TransparentFX
@@ -12,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Enemy
+  - Key
   - 
   - 
   - 
@@ -41,6 +48,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Player
+    uniqueID: 2010270861
+    locked: 0
   - name: Background
     uniqueID: 1033195809
     locked: 0
@@ -50,12 +60,12 @@ TagManager:
   - name: Platforms
     uniqueID: 705201229
     locked: 0
-  - name: Player
-    uniqueID: 2010270861
-    locked: 0
   - name: Enemies
     uniqueID: 1581627825
     locked: 0
   - name: Foreground
     uniqueID: 1491628213
+    locked: 0
+  - name: Key
+    uniqueID: 1403709143
     locked: 0
