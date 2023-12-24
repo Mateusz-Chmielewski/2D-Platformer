@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,6 +33,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 startPosition;
 
+    private bool moveRight = false;
+    private bool moveLeft = false;
+
     public GameObject temp1;
     // Start is called before the first frame update
     void Start()
@@ -43,26 +47,26 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         isWalking = false;
+        moveRight = false;
+        moveLeft = false;
         if (GameManager.currentGameState==GameState.GS_GAME)
         {
             Debug.Log("GRAMY");
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
-                transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                moveRight = true;
                 isWalking = true;
-                gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
 
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
-                transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                moveLeft = true;
                 isWalking = true;
-                gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Jump();
+                Jump(false);
             }
             animator.SetBool("isGrounded", IsGrounded());
             animator.SetBool("isWalking", isWalking);
@@ -71,6 +75,20 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.Log(GameManager.currentGameState);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(moveRight == true)
+        {
+            transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+            gameObject.transform.localScale = new Vector3(1, 1, 1);
+        }
+        if (moveLeft == true)
+        {
+            transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+            gameObject.transform.localScale = new Vector3(-1, 1, 1);
         }
     }
 
@@ -84,13 +102,16 @@ public class PlayerController : MonoBehaviour
 
     bool IsGrounded()
     {
-        return Physics2D.Raycast(this.transform.position, Vector2.down, rayLength, groundLayer.value);
-
+        Vector2 leftGroundRayPos = new Vector2(transform.position.x - 0.5f, transform.position.y);
+        Vector2 rightGroundRayPos = new Vector2(transform.position.x + 0.5f, transform.position.y);
+        Debug.DrawRay(leftGroundRayPos, Vector2.down);
+        Debug.DrawRay(rightGroundRayPos, Vector2.down);
+        return (Physics2D.Raycast(rightGroundRayPos, Vector2.down, rayLength, groundLayer.value) || (Physics2D.Raycast(leftGroundRayPos, Vector2.down, rayLength, groundLayer.value)));
     }
 
-    void Jump()
+    void Jump(bool unconditional)
     {
-        if (IsGrounded() || doubleJump == true)
+        if (IsGrounded() || doubleJump == true || unconditional)
         {
             if (!IsGrounded())
             {
@@ -128,15 +149,18 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("WIN");
             }
         }
-        if(other.CompareTag("Enemies"))
+        if (other.CompareTag("Enemies"))
         {
-            if(transform.position.y>other.gameObject.transform.position.y)
+            EnemyController enemy = other.GetComponent<EnemyController>();
+            bool isAlive = enemy.isAlive;
+            if ((transform.position.y>other.gameObject.transform.position.y)&&(isAlive))
             {
                 GameManager.AddPoints(50);
                 GameManager.AddEnemyDestruction();
                 Debug.Log("Killed a enemy :)");
+                Jump(true);
             }
-            else
+            else if(isAlive)
             {
                 GameManager.UpdateHearth();
                 Death();

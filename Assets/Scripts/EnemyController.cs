@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     [Range(0.01f, 20.0f)][SerializeField] private float moveSpeed = 1f;
 
     private bool isMovingRight = true;
+    public bool isAlive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -72,6 +73,7 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator KillOnAnimationEnd()
     {
+        isAlive = false;
         moveSpeed = 0;
         yield return new WaitForSeconds(1);
         gameObject.SetActive(false);    
