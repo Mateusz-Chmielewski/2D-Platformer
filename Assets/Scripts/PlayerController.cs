@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : MonoBehaviour
 {
@@ -149,7 +148,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("WIN");
             }
         }
-        if (other.CompareTag("Enemies"))
+        if(other.CompareTag("Enemies"))
         {
             EnemyController enemy = other.GetComponent<EnemyController>();
             bool isAlive = enemy.isAlive;
