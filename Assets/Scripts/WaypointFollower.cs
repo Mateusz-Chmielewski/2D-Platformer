@@ -21,12 +21,12 @@ public class WaypointFollower : MonoBehaviour
         Vector2.Distance((waypoints[currentWaypoint].transform.position), ((waypoints[(currentWaypoint + 1) % waypoints.Length].transform.position)));
         if(transform.position == waypoints[(currentWaypoint + 1) % waypoints.Length].transform.position )
         {
-            Debug.Log("ZMIANA");
+            //Debug.Log("ZMIANA");
             currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
         }
         else
         {
-            Debug.Log("JAZDA");
+            //Debug.Log("JAZDA");
             transform.position = Vector2.MoveTowards(transform.position, waypoints[(currentWaypoint + 1) % waypoints.Length].transform.position, speed * Time.deltaTime);
         }
 

@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     GameManager GameManager;
 
-    const float rayLength = 2f;
+    const float rayLength = 1f;
 
     private int score = 0;
 
@@ -26,8 +26,6 @@ public class PlayerController : MonoBehaviour
     private bool isWalking = false;
     private bool doubleJump = true;
 
-    private Vector3 theScale;
-
     private int lives = 3;
 
     private Vector2 startPosition;
@@ -35,22 +33,39 @@ public class PlayerController : MonoBehaviour
     private bool moveRight = false;
     private bool moveLeft = false;
 
+    private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
+
     public GameObject temp1;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
+        /*
+        if(IsGrounded())
+        {
+            Debug.Log("ONGROUND");
+        }
+        else
+        {
+            Debug.Log("notonground");
+        }
+        Debug.Log(coyoteTimeCounter);
+        */
         isWalking = false;
         moveRight = false;
         moveLeft = false;
         if (GameManager.currentGameState==GameState.GS_GAME)
         {
-            Debug.Log("GRAMY");
+            if (IsGrounded())
+            {
+                coyoteTimeCounter = coyoteTime;
+            }
+            else
+            {
+                coyoteTimeCounter -= Time.deltaTime;
+            }
+
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 moveRight = true;
@@ -108,24 +123,44 @@ public class PlayerController : MonoBehaviour
         return (Physics2D.Raycast(rightGroundRayPos, Vector2.down, rayLength, groundLayer.value) || (Physics2D.Raycast(leftGroundRayPos, Vector2.down, rayLength, groundLayer.value)));
     }
 
-    void Jump(bool unconditional)
+    bool CanJump()
     {
-        if (IsGrounded() || doubleJump == true || unconditional)
+        Debug.Log(rigidBody.velocity.y);
+        Debug.Log(coyoteTimeCounter);
+
+        if (IsGrounded() || (coyoteTimeCounter > 0f) && (rigidBody.velocity.y < 0))
         {
-            if (!IsGrounded())
+            if (IsGrounded())
             {
-                doubleJump = false;
+                Debug.Log("isgroundedjump");
             }
             else
             {
-                doubleJump = true;
+                Debug.Log("isCOYOTEjump");
             }
+            coyoteTimeCounter = 0f;
+            doubleJump = true;
+            return true;
+        }
+        if (doubleJump)
+        {
+            doubleJump = false;
+            Debug.Log("isdoublejump");
+            return true;
+        }
+        return false;  
+    }
+
+    void Jump(bool unconditional)
+    {
+        if (unconditional || CanJump())
+        {
             rigidBody.velocity = Vector2.zero;
             rigidBody.angularVelocity = 0f;
             rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
             //Debug.Log("Jumper");
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
