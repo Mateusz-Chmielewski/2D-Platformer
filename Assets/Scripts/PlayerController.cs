@@ -90,6 +90,12 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("down pressed");
                 fallThrough = true;
             }
+
+            if (moveLeft && moveRight)
+            {
+                isWalking = false;
+            }
+
             animator.SetBool("isGrounded", IsGrounded());
             animator.SetBool("isWalking", isWalking);
             //Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.white, 1, false);

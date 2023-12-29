@@ -12,7 +12,7 @@ MonoImporter:
   - src: {instanceID: 0}
   - eagleDeathSound: {instanceID: 0}
   - bonusSound: {instanceID: 0}
-  - pick: {fileID: 8300000, guid: f3379d7c990fe4e6b9215fd0a4c19103, type: 3}
+  - pick: {instanceID: 0}
   - pauseMenuCanvas: {instanceID: 0}
   - CompletedLevelCanvas: {instanceID: 0}
   executionOrder: 0

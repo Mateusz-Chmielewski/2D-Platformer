@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     {
         time += Time.deltaTime;
         scoreText.SetText(score.ToString());
-        timeText.SetText(string.Format("{0:00}:{1:00}", (int)((time + 1) / 60), time % 60));
+        timeText.SetText(string.Format("{0:00}:{1:00}", (int)((time + 1) / 60), (time + 1) % 60));
 
 
         if (Input.GetKeyDown(KeyCode.Escape))

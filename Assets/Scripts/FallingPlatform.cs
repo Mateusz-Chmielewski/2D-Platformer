@@ -11,10 +11,12 @@ public class FallingPlatform : MonoBehaviour
     private Vector2 startPosition;
     private float modifier = 0.1f;
 
+    public GameObject sRenderer;
+
     void Awake()
     {
         boxCollider = gameObject.GetComponent<BoxCollider2D>();
-        sprite = gameObject.GetComponent<SpriteRenderer>();
+        sprite = sRenderer.GetComponent<SpriteRenderer>();
         startPosition = transform.position;
     }
 
@@ -22,12 +24,12 @@ public class FallingPlatform : MonoBehaviour
     {
         isFalling = true;
         yield return new WaitForSeconds(1);
-        boxCollider.isTrigger = true;
+        boxCollider.enabled = false;
         sprite.enabled = false;
         isFalling = false;
-        transform.position = startPosition;
+        sRenderer.transform.position = startPosition;
         yield return new WaitForSeconds(3);
-        boxCollider.isTrigger = false;
+        boxCollider.enabled = true;
         sprite.enabled = true;  
     }
 
@@ -43,7 +45,7 @@ public class FallingPlatform : MonoBehaviour
     {
         if (isFalling)
         {
-            transform.Translate(modifier, 0.0f, 0.0f, Space.World);
+            sRenderer.transform.Translate(modifier, 0.0f, 0.0f, Space.World);
             modifier = -modifier;
         }
     }
