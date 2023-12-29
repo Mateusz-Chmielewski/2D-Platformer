@@ -16,7 +16,7 @@ public class GeneratedPlatforms : MonoBehaviour
     static int PLATFORMS_NUM = 8;
     GameObject[] platforms;
     Vector3[] positions;
-    private float time = 0f;
+    //private float time = 0f;
     // Start is called before the first frame update
 
     void Awake()

@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text enemiesDestroyedText;
 
     public AudioSource src;
-    public AudioClip eagleDeathSound, bonusSound;
+    public AudioClip eagleDeathSound, bonusSound, pick;
 
     private int score = 10;
     private int highestScore = 10;
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     {
         time += Time.deltaTime;
         scoreText.SetText(score.ToString());
-        timeText.SetText(string.Format("{0:00}:{1:00}", time / 60, time % 60));
+        timeText.SetText(string.Format("{0:00}:{1:00}", (int)((time + 1) / 60), time % 60));
 
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -112,6 +112,12 @@ public class GameManager : MonoBehaviour
         src.Play();
         keysTab[keysFound].color = Color.white;
         keysFound++;
+    }
+
+    public void AddGem()
+    {
+        src.clip = pick;
+        src.Play();
     }
 
     public void UpdateHearth()
