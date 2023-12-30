@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
+    public bool fallThrough = false;
 
     public GameObject temp1;
 
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log(coyoteTimeCounter);
         */
+        fallThrough = false;
         isWalking = false;
         moveRight = false;
         moveLeft = false;
@@ -82,6 +84,18 @@ public class PlayerController : MonoBehaviour
             {
                 Jump(false);
             }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                Debug.Log("down pressed");
+                fallThrough = true;
+            }
+
+            if (moveLeft && moveRight)
+            {
+                isWalking = false;
+            }
+
             animator.SetBool("isGrounded", IsGrounded());
             animator.SetBool("isWalking", isWalking);
             //Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.white, 1, false);
@@ -168,6 +182,7 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("Bonus"))
         {
             GameManager.AddPoints(10);
+            GameManager.AddGem();
             Debug.Log("Score: " + score);
             other.gameObject.SetActive(false);
         }
@@ -183,19 +198,18 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("WIN");
             }
         }
-        if(other.CompareTag("Enemies"))
+        if (other.CompareTag("Enemies"))
         {
-            EnemyController enemy = other.GetComponent<EnemyController>();
-            bool isAlive = enemy.isAlive;
-            if ((transform.position.y>other.gameObject.transform.position.y)&&(isAlive))
+            if ((transform.position.y > other.gameObject.transform.position.y))
             {
                 GameManager.AddPoints(50);
                 GameManager.AddEnemyDestruction();
                 Debug.Log("Killed a enemy :)");
                 Jump(true);
             }
-            else if(isAlive)
+            else
             {
+                Debug.Log("Killed a enemy :)");
                 GameManager.UpdateHearth();
                 Death();
             }

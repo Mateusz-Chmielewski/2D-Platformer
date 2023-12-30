@@ -3,7 +3,18 @@ guid: 20eccd884c7fe9e4683e196c47c33b66
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - scoreText: {instanceID: 0}
+  - endScoreText: {instanceID: 0}
+  - HighscoreText: {instanceID: 0}
+  - timeText: {instanceID: 0}
+  - enemiesDestroyedText: {instanceID: 0}
+  - src: {instanceID: 0}
+  - eagleDeathSound: {instanceID: 0}
+  - bonusSound: {instanceID: 0}
+  - pick: {instanceID: 0}
+  - pauseMenuCanvas: {instanceID: 0}
+  - CompletedLevelCanvas: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
