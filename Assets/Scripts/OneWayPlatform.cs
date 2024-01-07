@@ -17,18 +17,24 @@ public class OneWayPlatform : MonoBehaviour
         if (other.collider.CompareTag("Player"))
         {
             player = other.gameObject.GetComponent<PlayerController>();
-            if (player.fallThrough)
-            {
-                platformEffector.surfaceArc = 0;
-                player = null;
-            }
+
         }
 
     }
-   
+
     void OnCollisionStay2D(Collision2D other)
     {
-        if(player == null)
+        if (other.collider.CompareTag("Player"))
+        {
+            player = other.gameObject.GetComponent<PlayerController>();
+
+        }
+
+    }
+
+    void Update()
+    {
+        if (player == null)
         {
             return;
         }
@@ -36,7 +42,6 @@ public class OneWayPlatform : MonoBehaviour
         if (player.fallThrough)
         {
             platformEffector.surfaceArc = 0;
-            player = null;
         }
     }
 
