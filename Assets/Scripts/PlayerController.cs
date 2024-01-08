@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rigidBody;
 
-    private int keysFound = 0;
+    public int keysFound = 0;
     private int keysNumber = 3;
 
     private bool isWalking = false;
@@ -42,17 +42,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        /*
-        if(IsGrounded())
-        {
-            Debug.Log("ONGROUND");
-        }
-        else
-        {
-            Debug.Log("notonground");
-        }
-        Debug.Log(coyoteTimeCounter);
-        */
         fallThrough = false;
         isWalking = false;
         moveRight = false;
@@ -231,9 +220,17 @@ public class PlayerController : MonoBehaviour
         {
             Death();
         }
+        if (other.CompareTag("Hazard"))
+        {
+            Death();
+        }
         if (other.CompareTag("MovingPlatform"))
         {
             transform.SetParent(other.transform);
+        }
+        if (other.CompareTag("Checkpoint"))
+        {
+            startPosition = transform.position;
         }
     }
 

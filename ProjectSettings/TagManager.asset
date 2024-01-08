@@ -12,6 +12,7 @@ TagManager:
   - MovingPlatform
   - GameManager
   - Hazard
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
