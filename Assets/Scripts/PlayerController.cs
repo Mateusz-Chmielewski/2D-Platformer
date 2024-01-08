@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Enemies"))
         {
-            if ((transform.position.y > other.gameObject.transform.position.y))
+            if ((transform.position.y > other.gameObject.transform.position.y + other.gameObject.transform.localScale.y / 3))
             {
                 GameManager.AddPoints(50);
                 GameManager.AddEnemyDestruction();
