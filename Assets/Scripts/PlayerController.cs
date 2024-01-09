@@ -9,11 +9,23 @@ public class PlayerController : MonoBehaviour
     [Range(0.01f, 20.0f)][SerializeField] private float jumpForce = 6f;
     [Space(10)]
 
+    [SerializeField] private GameObject Arrow;
+    [SerializeField] private TrailRenderer tr;
+
     GameManager GameManager;
 
     const float rayLength = 1f;
+    private float dashPower = 24f;
+    private bool isDashing = false;
+    private float dashTime = 0.2f;
+    private float dashCooldown = 1.0f;
+    private bool canDash = true;
+
+    private bool hasShooting = false;
+    private bool hasDash = false;
 
     private int score = 0;
+    private int arrowCooldown = 0;
 
     public LayerMask groundLayer;
 
@@ -29,6 +41,8 @@ public class PlayerController : MonoBehaviour
     private int lives = 3;
 
     private Vector2 startPosition;
+    private Vector2 mousePosition;
+    private Quaternion mouseRotation;
 
     private bool moveRight = false;
     private bool moveLeft = false;
@@ -85,6 +99,29 @@ public class PlayerController : MonoBehaviour
                 isWalking = false;
             }
 
+            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            float angle = Mathf.Atan2(mousePosition.y - transform.position.y, mousePosition.x - transform.position.x) * Mathf.Rad2Deg;
+            mouseRotation = Quaternion.Euler(0, 0, angle);
+            if(arrowCooldown > 0)
+            {
+                arrowCooldown--;
+            }
+
+            if (Input.GetMouseButtonDown(0) && hasShooting)
+            {
+                if (arrowCooldown == 0)
+                {
+                    arrowCooldown = 150;
+                    Shoot();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && hasDash)
+            {
+                Debug.Log("Dash");
+                StartCoroutine(Dash());
+            }
+
             animator.SetBool("isGrounded", IsGrounded());
             animator.SetBool("isWalking", isWalking);
             //Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.white, 1, false);
@@ -97,6 +134,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDashing)
+        {
+            return;
+        }
         if(moveRight == true)
         {
             transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
@@ -189,7 +230,7 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Enemies"))
         {
-            if ((transform.position.y > other.gameObject.transform.position.y + other.gameObject.transform.localScale.y / 3))
+            if ((transform.position.y > other.gameObject.transform.position.y))
             {
                 GameManager.AddPoints(50);
                 GameManager.AddEnemyDestruction();
@@ -209,6 +250,22 @@ public class PlayerController : MonoBehaviour
             GameManager.AddKeys();
             Debug.Log("Klucz elo :)");
             other.gameObject.SetActive(false);
+        }
+        if (other.CompareTag("KeyShoot"))
+        {
+            keysFound++;
+            GameManager.AddKeys();
+            Debug.Log("Klucz elo :)");
+            other.gameObject.SetActive(false);
+            hasShooting = true;
+        }
+        if (other.CompareTag("KeyDash"))
+        {
+            keysFound++;
+            GameManager.AddKeys();
+            Debug.Log("Klucz elo :)");
+            other.gameObject.SetActive(false);
+            hasDash = true;
         }
         if (other.CompareTag("Heart"))
         {
@@ -254,6 +311,30 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Lives remaining " + lives);
         }
+    }
+
+    private void Shoot()
+    {
+        Instantiate(Arrow, transform.position, mouseRotation);
+    }
+
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rigidBody.gravityScale;
+        rigidBody.gravityScale = 0f;
+        rigidBody.velocity = new Vector2(transform.localScale.x * dashPower, 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashTime);
+        tr.emitting = false;
+        rigidBody.gravityScale = originalGravity;
+        rigidBody.velocity = new Vector2(transform.localScale.x * moveSpeed, 0f);
+        isDashing = false;
+        Debug.Log("done dashing");
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+        Debug.Log("can dash");
     }
 }
 
