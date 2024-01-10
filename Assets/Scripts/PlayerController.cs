@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
     public bool fallThrough = false;
 
     public GameObject temp1;
+    private GameObject shield;
+    private bool isShieldActive = false;
 
     void Update()
     {
@@ -156,6 +158,8 @@ public class PlayerController : MonoBehaviour
         startPosition = transform.position;
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        shield = transform.GetChild(2).gameObject;
+        shield.SetActive(false);
     }
 
     bool IsGrounded()
@@ -237,11 +241,16 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Killed a enemy :)");
                 Jump(true);
             }
-            else
+            else if (!isShieldActive)
             {
-                Debug.Log("Killed a enemy :)");
+                Debug.Log("Killed by enemy :)");
                 GameManager.UpdateHearth();
                 Death();
+            }
+            else
+            {
+                Debug.Log("Shield is destroyed");
+                removeShield();
             }
         }
         if (other.CompareTag("Key"))
@@ -289,6 +298,17 @@ public class PlayerController : MonoBehaviour
         {
             startPosition = transform.position;
         }
+        if (other.CompareTag("ExplosionRange"))
+        {
+            Debug.Log("Player in Range");
+            Animator explosionAnimator = other.gameObject.GetComponentInParent<Animator>();
+            explosionAnimator.SetBool("Exploading", true);
+        }
+        if (other.CompareTag("AddShield"))
+        {
+            shield.SetActive(true);
+            isShieldActive = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -335,6 +355,20 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
         Debug.Log("can dash");
+    }
+
+    private void removeShield()
+    {
+        isShieldActive = false;
+        shield.SetActive(false);
+        StartCoroutine(showShield());
+    }
+
+    private IEnumerator showShield()
+    {
+        yield return new WaitForSeconds(5);
+        isShieldActive = true;
+        shield.SetActive(true);
     }
 }
 

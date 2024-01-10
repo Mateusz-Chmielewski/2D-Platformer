@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateHearth()
     {
-        heartsLeft--;
+        heartsLeft = heartsLeft > 0 ? heartsLeft - 1 : 0;
         hearts[heartsLeft].enabled = false;
     }
 

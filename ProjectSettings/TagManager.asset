@@ -17,6 +17,7 @@ TagManager:
   - Blocks
   - KeyShoot
   - KeyDash
+  - ExplosionRange
   layers:
   - Default
   - TransparentFX
